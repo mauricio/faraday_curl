@@ -1,10 +1,14 @@
 require 'spec_helper'
-require 'faraday_curl'
+require 'faraday'
 require 'faraday_middleware'
+require 'faraday_curl'
+require 'faraday/request/url_encoded'
+
+Faraday::Request.register_middleware( :url_encoded => Faraday::Request::UrlEncoded )
 
 describe Faraday::Curl::Middleware do
 
-  let(:version) { "-H 'User-Agent: Faraday v0.8.9'" }
+  let(:version) { "-H 'User-Agent: Faraday v0.9.0'" }
 
   def create_connection( *request_middlewares )
     Faraday.new( :url => 'http://example.com' ) do |b|
@@ -42,7 +46,7 @@ describe Faraday::Curl::Middleware do
   it 'should render the URL encoded params for the POST request' do
     connection = create_connection :url_encoded
     response = connection.put( "/echo", :name => ['john', 'doe'], :age => 50 )
-    match_command(response, "PUT", "-H 'Content-Type: application/x-www-form-urlencoded'", "-d 'name%5B%5D=john&name%5B%5D=doe&age=50'", '"http://example.com/echo"')
+    match_command(response, "PUT", "-H 'Content-Type: application/x-www-form-urlencoded'", "-d 'age=50&name%5B%5D=john&name%5B%5D=doe'", '"http://example.com/echo"')
   end
 
 end

@@ -48,4 +48,4 @@ module Faraday
   end
 end
 
-Faraday.register_middleware :request, :curl => Faraday::Curl::Middleware
+Faraday::Request.register_middleware :curl => Faraday::Curl::Middleware
