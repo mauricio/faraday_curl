@@ -42,7 +42,7 @@ module Faraday
       end
 
       def quote(value)
-        value.gsub("'", "\\'")
+        value.to_s.gsub("'", "\\'")
       end
     end
   end
