@@ -49,4 +49,12 @@ describe Faraday::Curl::Middleware do
     match_command(response, "PUT", "-H 'Content-Type: application/x-www-form-urlencoded'", "-d 'age=50&name%5B%5D=john&name%5B%5D=doe'", '"http://example.com/echo"')
   end
 
+  it 'should escape headers' do
+    connection = create_connection
+    response = connection.get( "/echo" ) do |request|
+      request.headers["Cookies"] = "exa'm'ple"
+    end
+    match_command(response, "GET", "-H 'Cookies: exa\\'m\\'ple'", '"http://example.com/echo"')
+  end
+
 end
