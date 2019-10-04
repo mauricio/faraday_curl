@@ -8,7 +8,7 @@ Faraday::Request.register_middleware( :url_encoded => Faraday::Request::UrlEncod
 
 describe Faraday::Curl::Middleware do
 
-  let(:version) { "-H 'User-Agent: Faraday v0.9.0'" }
+  let(:version) { "-H 'User-Agent: Faraday v#{Faraday::VERSION}'" }
 
   def create_connection( *request_middlewares )
     Faraday.new( :url => 'http://example.com' ) do |b|
