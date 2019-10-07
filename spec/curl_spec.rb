@@ -8,7 +8,7 @@ Faraday::Request.register_middleware( :url_encoded => Faraday::Request::UrlEncod
 
 describe Faraday::Curl::Middleware do
 
-  let(:version) { "-H 'User-Agent: Faraday v0.9.0'" }
+  let(:version) { "-H 'User-Agent: Faraday v#{Faraday::VERSION}'" }
 
   def create_connection( *request_middlewares )
     Faraday.new( :url => 'http://example.com' ) do |b|
@@ -47,6 +47,14 @@ describe Faraday::Curl::Middleware do
     connection = create_connection :url_encoded
     response = connection.put( "/echo", :name => ['john', 'doe'], :age => 50 )
     match_command(response, "PUT", "-H 'Content-Type: application/x-www-form-urlencoded'", "-d 'age=50&name%5B%5D=john&name%5B%5D=doe'", '"http://example.com/echo"')
+  end
+
+  it 'should escape headers' do
+    connection = create_connection
+    response = connection.get( "/echo" ) do |request|
+      request.headers["Cookies"] = "exa'mple"
+    end
+    match_command(response, "GET", "-H 'Cookies: exa'\\''mple'", '"http://example.com/echo"')
   end
 
 end
