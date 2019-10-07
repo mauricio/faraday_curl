@@ -52,9 +52,9 @@ describe Faraday::Curl::Middleware do
   it 'should escape headers' do
     connection = create_connection
     response = connection.get( "/echo" ) do |request|
-      request.headers["Cookies"] = "exa'm'ple"
+      request.headers["Cookies"] = "exa'mple"
     end
-    match_command(response, "GET", "-H 'Cookies: exa\\'m\\'ple'", '"http://example.com/echo"')
+    match_command(response, "GET", "-H 'Cookies: exa'\\''mple'", '"http://example.com/echo"')
   end
 
 end
